@@ -3,9 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dice Roller App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 { color: #667eea; margin-bottom: 30px; font-size: 2.5em; }
+        .dice-display {
+            font-size: 5em;
+            margin: 30px 0;
+            animation: roll 0.6s ease-in-out;
+        }
+        @keyframes roll { 0% { transform: rotateY(0deg) rotateX(0deg); } 100% { transform: rotateY(360deg) rotateX(360deg); } }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 30px;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+        .counters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .counter {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .counter.active { background: #667eea; color: white; transform: scale(1.1); }
+        .counter-num { font-size: 2em; font-weight: bold; }
+        .counter-count { font-size: 0.9em; opacity: 0.7; }
+    </style>
 </head>
 <body>
-    
+    <div class="container">
+        <h1>🎲 Dice Roller</h1>
+        <div class="dice-display" id="dice">🎲</div>
+        <button onclick="rollDice()">Roll the Dice!</button>
+        <div class="counters" id="counters"></div>
+    </div>
+
+    <script>
+        const diceEmojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        const counters = [0, 0, 0, 0, 0, 0];
+        const diceDisplay = document.getElementById('dice');
+        const countersDiv = document.getElementById('counters');
+
+        function updateCounters() {
+            countersDiv.innerHTML = counters.map((count, i) => 
+                `<div class="counter"><div class="counter-num">${i + 1}</div><div class="counter-count">${count}</div></div>`
+            ).join('');
+        }
+
+        function rollDice() {
+            const num = Math.floor(Math.random() * 6);
+            diceDisplay.classList.remove('roll');
+            void diceDisplay.offsetWidth;
+            diceDisplay.classList.add('roll');
+            diceDisplay.textContent = diceEmojis[num];
+            counters[num]++;
+            updateCounters();
+            document.querySelector(`.counter:nth-child(${num + 1})`).classList.add('active');
+            setTimeout(() => document.querySelector(`.counter:nth-child(${num + 1})`).classList.remove('active'), 300);
+        }
+        updateCounters();
+    </script>
 </body>
 </html>
